@@ -36,6 +36,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
         template.update(connection -> {
             // 자동 증가 키
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            /*connection.prepareStatement(sql, new String[]{"id})를 사용해서 id를 지정해 INSERT 쿼리 실행 이후에 데이터베이스에서 생성된 ID 값을 조회*/
             ps.setString(1, item.getItemName());
             ps.setInt(2, item.getPrice());
             ps.setInt(3, item.getQuantity());
@@ -49,6 +50,8 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
+        /* ?에 버안당헐 파라미터를 순서대로 전달
+        * 반환 값은 해당 쿼리의 영향을 받은 로우의 수 `where id = ?` 를 지정했기 때문에 영향 받은 로우수는 최대 1개*/
         String sql = "update item set item_name=?, item_price=?, item_quantity=? where id=?";
         template.update(sql,
                 updateParam.getItemName(),
