@@ -50,13 +50,13 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
-        /* ?에 버안당헐 파라미터를 순서대로 전달
-        * 반환 값은 해당 쿼리의 영향을 받은 로우의 수 `where id = ?` 를 지정했기 때문에 영향 받은 로우수는 최대 1개*/
-        String sql = "update item set item_name=?, item_price=?, item_quantity=? where id=?";
+        /* ?에 바인등할 파라미터를 순서대로 전달
+        * 반환 값은 해당 쿼리의 영향을 받은 로우 수 `where id = ?` 를 지정했기 때문에 영향 받은 로우 수는 최대 1개*/
+        String sql = "update item set item_name=?, price=?, quantity=? where id=?";
         template.update(sql,
                 updateParam.getItemName(),
-                updateParam.getQuantity(),
                 updateParam.getPrice(),
+                updateParam.getQuantity(),
                 itemId);
     }
 
