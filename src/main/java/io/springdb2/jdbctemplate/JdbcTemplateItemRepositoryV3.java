@@ -51,7 +51,8 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
     public void update(Long itemId, ItemUpdateDto updateParam) {
         /* ?에 바인등할 파라미터를 순서대로 전달
          * 반환 값은 해당 쿼리의 영향을 받은 로우 수 `where id = ?` 를 지정했기 때문에 영향 받은 로우 수는 최대 1개*/
-        String sql = "update item set item_name=:itemName, price=:price, quantity=:quantity" +
+        String sql = "update item " +
+                "set item_name=:itemName, price=:price, quantity=:quantity " +
                 "where id=:id";
 
         SqlParameterSource param = new MapSqlParameterSource() //파라미터 넘길때 MapSqlParameterSource 사용
