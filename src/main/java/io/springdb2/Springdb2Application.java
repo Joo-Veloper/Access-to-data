@@ -1,9 +1,6 @@
 package io.springdb2;
 
-import io.springdb2.config.JdbcTemplateV3Config;
-import io.springdb2.config.JpaConfig;
-import io.springdb2.config.MyBatisConfig;
-import io.springdb2.config.SpringDataJpaConfig;
+import io.springdb2.config.*;
 import io.springdb2.domain.item.repository.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -21,7 +18,8 @@ import javax.sql.DataSource;
 //@Import(JdbcTemplateV3Config.class)
 //@Import(MyBatisConfig.class)
 //@Import(JpaConfig.class)
-@Import(SpringDataJpaConfig.class)
+//@Import(SpringDataJpaConfig.class)
+@Import(QuerydslConfig.class)
 @Slf4j
 @SpringBootApplication(scanBasePackages = "io.springdb2.web")
 public class Springdb2Application {
