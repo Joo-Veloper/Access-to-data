@@ -19,7 +19,8 @@ import javax.sql.DataSource;
 //@Import(MyBatisConfig.class)
 //@Import(JpaConfig.class)
 //@Import(SpringDataJpaConfig.class)
-@Import(QuerydslConfig.class)
+//@Import(QuerydslConfig.class)
+@Import(V2Config.class)
 @Slf4j
 @SpringBootApplication(scanBasePackages = "io.springdb2.web")
 public class Springdb2Application {
