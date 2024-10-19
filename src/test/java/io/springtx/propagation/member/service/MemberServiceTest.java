@@ -1,5 +1,6 @@
 package io.springtx.propagation.member.service;
 
+import io.springtx.propagation.member.entity.Member;
 import io.springtx.propagation.member.repository.LogRepository;
 import io.springtx.propagation.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -57,5 +58,22 @@ class MemberServiceTest {
         assertTrue(logRepository.find(username).isEmpty());
     }
 
+    /**
+     * MemberService @Transactional:ON
+     * MemberRepository @Transactional:OFF
+     * LogRepository @Transactional:OFF
+     */
+    @Test
+    void singleTx() {
+        //given
+        String username = "singleTx";
+
+        //when
+        memberService.joinV1(username);
+
+        //then: 모든 데이터가 정상 저장된다.
+        assertTrue(memberRepository.find(username).isPresent());
+        assertTrue(logRepository.find(username).isPresent());
+    }
 
 }
