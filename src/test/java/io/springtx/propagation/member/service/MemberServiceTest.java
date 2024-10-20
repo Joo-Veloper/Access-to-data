@@ -1,16 +1,15 @@
 package io.springtx.propagation.member.service;
 
-import io.springtx.propagation.member.entity.Member;
 import io.springtx.propagation.member.repository.LogRepository;
 import io.springtx.propagation.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.UnexpectedRollbackException;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @SpringBootTest
@@ -24,25 +23,27 @@ class MemberServiceTest {
     LogRepository logRepository;
 
     /**
-     * MemberService @Transactional:OFF
-     * MemberRepository @Transactional:ON
-     * LogRepository @Transactional:ON
+     * memberService    @Transactional:OFF
+     * memberRepository @Transactional:ON
+     * logRepository    @Transactional:ON
      */
     @Test
     void outerTxOff_success() {
         //given
         String username = "outerTxOff_success";
+
         //when
         memberService.joinV1(username);
-        //then: 모든 데이터가 정상 저장된다.
+
+        //when: 모든 데이터가 정상 저장된다.
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isPresent());
     }
 
     /**
-     * MemberService @Transactional:OFF
-     * MemberRepository @Transactional:ON
-     * LogRepository @Transactional:ON Exception
+     * memberService    @Transactional:OFF
+     * memberRepository @Transactional:ON
+     * logRepository    @Transactional:ON Exception
      */
     @Test
     void outerTxOff_fail() {
@@ -53,15 +54,16 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.joinV1(username))
                 .isInstanceOf(RuntimeException.class);
 
-        //then: 모든 데이터가 정상 저장된다.
+        //when: log 데이터는 롤백된다.
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isEmpty());
     }
 
+
     /**
-     * MemberService @Transactional:ON
-     * MemberRepository @Transactional:OFF
-     * LogRepository @Transactional:OFF
+     * memberService    @Transactional:ON
+     * memberRepository @Transactional:OFF
+     * logRepository    @Transactional:OFF
      */
     @Test
     void singleTx() {
@@ -71,15 +73,15 @@ class MemberServiceTest {
         //when
         memberService.joinV1(username);
 
-        //then: 모든 데이터가 정상 저장된다.
+        //when: 모든 데이터가 정상 저장된다.
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isPresent());
     }
 
     /**
-     * MemberService @Transactional:ON
-     * MemberRepository @Transactional:ON
-     * LogRepository @Transactional:ON
+     * memberService    @Transactional:ON
+     * memberRepository @Transactional:ON
+     * logRepository    @Transactional:ON
      */
     @Test
     void outerTxOn_success() {
@@ -89,9 +91,28 @@ class MemberServiceTest {
         //when
         memberService.joinV1(username);
 
-        //then: 모든 데이터가 정상 저장된다.
+        //when: 모든 데이터가 정상 저장된다.
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isPresent());
+    }
+
+    /**
+     * memberService    @Transactional:ON
+     * memberRepository @Transactional:ON
+     * logRepository    @Transactional:ON Exception
+     */
+    @Test
+    void outerTxOn_fail() {
+        //given
+        String username = "로그예외_outerTxOn_fail";
+
+        //when
+        assertThatThrownBy(() -> memberService.joinV1(username))
+                .isInstanceOf(RuntimeException.class);
+
+        //when: 모든 데이터가 롤백된다.
+        assertTrue(memberRepository.find(username).isEmpty());
+        assertTrue(logRepository.find(username).isEmpty());
     }
 
 }
